@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "cgf/CGFscene.h"
 #include "cgf/CGFshader.h"
+#include "cgf/CGFtexture.h"
 #include "parser.h"
 #include "Plane.h"
 #include "Patch.h"
@@ -10,6 +11,8 @@
 #include "Light.h"
 #include "Cameras.h"
 #include "PolyLineAnimation.h"
+#include "Board.h"
+#include "Piece.h"
 
 class Scene : public CGFscene
 {
@@ -40,6 +43,8 @@ private:
 	GLuint display_list;
 
 	Terrain * terr;
+	Board * b;
+	Piece * peca;
 
 	GraphNode* temp;
 	PolyLineAnimation * anims;

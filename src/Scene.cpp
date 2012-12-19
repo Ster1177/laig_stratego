@@ -169,68 +169,14 @@ void Scene::init()
 			i++;
 		}
 
-	Animation * anim;
-	Animation * anim1;
-	Animation * anim2;
-	Animation * anim3;
-	anims = new PolyLineAnimation();
-	//compiles the display list!
-	this->display_list = glGenLists(1);
-	glNewList(this->display_list,GL_COMPILE);
-	this->graph->getRoot()->displayListDraw();
-	glEndList();
+	b = new Board();
+	//One piece
+	peca = new Piece();
 
-
-	RotateAnimation * rot;
-	this->setUpdatePeriod(10);
-	temp = new GraphNode("cylinder",new Cylinder(1,1,1,50,50), NULL);
-	temp->translate(40,4,40);
-
-//	anim = new LineAnimation(0,0,0,0,10,10,temp,5);
-//	rot = new RotateAnimation(temp, 3, 90);
-//	anims->addAnimation(rot);
-
-	anim1 = new LineAnimation(0,10,10, 10,10,10,temp,5);
-	anim2 = new LineAnimation(10,10,10,10,10,3,temp,5);
-	anim3 = new LineAnimation(10,10,3,2,4,3,temp,5);
-
-
-	//Add the animations to apply
-//	anims->addAnimation(anim);
-	anims->addAnimation(anim1);
-	anims->addAnimation(anim2);
-	anims->addAnimation(anim3);
-
-//	anims->addAnimation(rot);
-	//Get size of animations' vector
-	size = anims->getAnimations().size();
-
-
-	elem * e = new elem;
-	e->name = "terrain";
-//	<terrain heightmap="textures/HuntersTown.png" texturemap="textures/HuntersTown_tex.jpg" fragmentshader="shaders/terrain.frag" vertexshader="shaders/terrain.vert" />
-	e->attr["heightmap"] = "textures/HuntersTown.png";
-	e->attr["texturemap"] = "textures/HuntersTown_tex.jpg";
-	e->attr["fragmentshader"] = "shaders/terrain.frag";
-	e->attr["vertexshader"] = "shaders/terrain.vert";
-
-
-
-	terr = new Terrain(e);
 }
 
 void Scene::update(long t){
-	cout << "Last update: " << t << endl;
-//	cout << "Size: " << size << endl;
-	if(anims->getAnimations()[pos]->end == true){
-		if (pos < size-1)
-		{
-			pos++;cout << "next animation " << pos ;
-			anims->getAnimations()[pos]->time = t;
-		}
-	}
 
-	 anims->getAnimations()[pos]->updateTime(t);
 
 }
 void Scene::display()
@@ -277,23 +223,8 @@ void Scene::display()
 
 	// Draw axis
 	axis.draw();
-
-
-	temp->draw();
-
-	terr->draw();
-
-
-
-	//draw Display list!0
-	glCallList(this->display_list);
-
-
-	//TODO DRAW OBJECTS AND SHIT
-	if(graph != NULL)
-	{
-		graph->getRoot()->draw();
-	}
+	peca->put();
+	b->draw();
 
 	// We have been drawing in a memory area that is not visible - the back buffer,
 	// while the graphics card is showing the contents of another buffer - the front buffer

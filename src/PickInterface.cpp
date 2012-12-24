@@ -85,7 +85,7 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 		for (int j=0; j < num; j++) 
 			ptr++;
 	}
-	
+
 	// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
 	if (selected!=NULL)
 	{
@@ -94,6 +94,7 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 		printf("Picked ID's: ");
 		for (int i=0; i<nselected; i++)
 			printf("%d ",selected[i]);
+			printf("%d ",nselected);
 		printf("\n");
 	}
 	else

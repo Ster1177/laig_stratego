@@ -199,7 +199,7 @@ void Scene::display()
 	if(i != 0){
 		for( it = cameras.begin() ; it != cameras.end() ;it++)
 			if(--i == 0){
-				(*it)->updateProjectionMatrix(CGFapplication::vpw, CGFapplication::vph);
+			//	(*it)->updateProjectionMatrix(CGFapplication::vpw, CGFapplication::vph);
 				(*it)->applyView();
 			}
 	} else{
@@ -223,8 +223,30 @@ void Scene::display()
 
 	// Draw axis
 	axis.draw();
-	peca->put();
+
 	b->draw();
+	glDisable(GL_TEXTURE_2D);
+	glNewList(1,GL_COMPILE);
+	peca->put();
+	glEndList();
+
+	// picking example, the important parts are the gl*Name functions
+		// and the code in the associted PickInterface class
+
+	// Example 1: simple naming
+		glPushMatrix();
+		glPushName(-1);		// Load a default name
+
+		for (int i=0; i< NUM_OBJS;i++)
+		{
+			glPushMatrix();
+			glTranslatef(i*1.4,0,0);
+			glLoadName(i);		//replaces the value on top of the name stack
+			glCallList(1);
+			glPopMatrix();
+		}
+		glPopMatrix();
+
 
 	// We have been drawing in a memory area that is not visible - the back buffer,
 	// while the graphics card is showing the contents of another buffer - the front buffer

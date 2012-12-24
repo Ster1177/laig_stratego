@@ -86,7 +86,8 @@ int main(int argc, char*argv[]){
 
 	try {
 		app.setScene(&sc);
-		app.setInterface(cgf_interface);
+		//app.setInterface(cgf_interface);
+		app.setInterface(new PickInterface());
 		app.run();
 	}
 	catch(GLexception& ex) {

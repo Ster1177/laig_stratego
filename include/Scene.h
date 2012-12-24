@@ -13,9 +13,15 @@
 #include "PolyLineAnimation.h"
 #include "Board.h"
 #include "Piece.h"
+#include "PickInterface.h"
+
+#define NUM_OBJS 3
+#define NUM_ROWS 10
+#define NUM_COLS 10
 
 class Scene : public CGFscene
 {
+	friend PickInterface;
 private:
 //globals
 	float background[4];

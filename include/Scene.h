@@ -13,7 +13,8 @@
 #include "PolyLineAnimation.h"
 #include "Board.h"
 #include "Piece.h"
-#include "PickInterface.h"
+#include <utility>
+//#include "PickInterface.h"
 
 #define NUM_OBJS 3
 #define NUM_ROWS 10
@@ -21,8 +22,8 @@
 
 class Scene : public CGFscene
 {
-	friend PickInterface;
-private:
+	//friend PickInterface;
+public:
 //globals
 	float background[4];
 	//polygon
@@ -47,14 +48,17 @@ private:
 
 	//display list in use
 	GLuint display_list;
+	pair<bool,pair<GLuint,GLuint>> choices;
+	map<GLuint,Piece *> selected_piece;
+	map<GLuint,Piece *> not_selected_piece;
+	map<GLuint, Piece *> pieces;
 
 	Terrain * terr;
 	Board * b;
-	Piece * peca;
 
 	GraphNode* temp;
 	PolyLineAnimation * anims;
-public:
+
 	//params: globals, lightingconfig
 	Scene(Elems*,elemContainer*);
 	void addLight(Light *);
@@ -68,7 +72,7 @@ public:
 	virtual ~Scene();
 	int cam;
 	int light;
-private:
+
 
 };
 

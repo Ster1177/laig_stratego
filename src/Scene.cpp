@@ -25,7 +25,7 @@ Scene::Scene(Elems* globals,elemContainer* lconfig):lights(), cameras(), cam(0),
 	//GLOBAL STUFF
 
 	for(; it != globals->end() ; it++){
-		if( (*it)->name == "background" ){
+		if( (*it)->name == "background"){
 			//<background r="0" g="0" b="0" a="0" />
 			stringstream ss;
 			ss << (*it)->attr["r"]; ss >> background[0];
@@ -169,14 +169,42 @@ void Scene::init()
 			i++;
 		}
 
+	selected_piece = map<GLuint,Piece *>();
+	not_selected_piece = map<GLuint,Piece *>();
+	pieces = map<GLuint,Piece *>();
+	choices = pair<bool, pair<GLuint,GLuint> >();
 	b = new Board();
 	//One piece
-	peca = new Piece();
+	Piece * peca;
+	for(unsigned int i=1; i<=10; i++) {
+		peca = new Piece();
+		pieces[i]= peca;
+//		not_selected_piece[i] = peca;
+	}
+	choices.first = false;
+	choices.second = pair<GLuint,GLuint>();
 
 }
 
 void Scene::update(long t){
 
+	// if something is selected
+	if(choices.first) {
+		//if piece was selected before
+		if(choices.second.first == 0) {
+			//Se for > 0, destino foi seleccionado
+			if(choices.second.second > 0) {
+			 //TODO: mover peça
+				choices.first = false;
+
+			}
+		}
+		else {
+			//popular maps
+			//criar lists gl_compile
+			choices.second.first = 0;
+		}
+	}
 
 }
 void Scene::display()
@@ -223,12 +251,9 @@ void Scene::display()
 
 	// Draw axis
 	axis.draw();
-
 	b->draw();
-	glDisable(GL_TEXTURE_2D);
-	glNewList(1,GL_COMPILE);
-	peca->put();
-	glEndList();
+
+
 
 	// picking example, the important parts are the gl*Name functions
 		// and the code in the associted PickInterface class
@@ -245,6 +270,7 @@ void Scene::display()
 			glCallList(1);
 			glPopMatrix();
 		}
+
 		glPopMatrix();
 
 
@@ -254,6 +280,7 @@ void Scene::display()
 	glutSwapBuffers();
 
 }
+
 
 Scene::~Scene()
 {

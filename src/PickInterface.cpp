@@ -1,11 +1,10 @@
 #include "PickInterface.h"
-#include "cgf/CGFapplication.h"
 
 // buffer to be used to store the hits during picking
 #define BUFSIZE 256
 GLuint selectBuf[BUFSIZE];
 
-void PickInterface::processMouse(int button, int state, int x, int y) 
+void PickInterface::processMouse(int button, int state, int x, int y)
 {
 	CGFinterface::processMouse(button,state, x, y);
 
@@ -15,7 +14,7 @@ void PickInterface::processMouse(int button, int state, int x, int y)
 		performPicking(x,y);
 }
 
-void PickInterface::performPicking(int x, int y) 
+void PickInterface::performPicking(int x, int y)
 {
 	// Sets the buffer to be used for selection and activate selection mode
 	glSelectBuffer (BUFSIZE, selectBuf);
@@ -51,7 +50,7 @@ void PickInterface::performPicking(int x, int y)
 
 	// force scene drawing under this mode
 	// only the names of objects that fall in the 5x5 window will actually be stored in the buffer
-	scene->display();
+	//((Scene *)this->scene)->peca->piece->translate(0,0,1);
 
 	// restore original projection matrix
 	glMatrixMode (GL_PROJECTION);
@@ -65,7 +64,8 @@ void PickInterface::performPicking(int x, int y)
 	processHits(hits, selectBuf);
 }
 
-void PickInterface::processHits (GLint hits, GLuint buffer[]) 
+
+void PickInterface::processHits (GLint hits, GLuint buffer[])
 {
 	GLuint *ptr = buffer;
 	GLuint mindepth = 0xFFFFFFFF;
@@ -92,11 +92,25 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
 		// possibly invoking a method on the scene class and passing "selected" and "nselected"
 		printf("Picked ID's: ");
-		for (int i=0; i<nselected; i++)
-			printf("%d ",selected[i]);
-			printf("%d ",nselected);
+		printf("%d ",selected[0]);
+		//printf("%d ",nselected);
 		printf("\n");
+
+		pair<GLuint,GLuint> * choices = &(((Scene *)this->scene)->choices);
+
+		if(choices->first == -1)
+			choices->first = selected[0];
+		else
+			choices->second = selected[0];
+
+
 	}
 	else
 		printf("Nothing selected while picking \n");	
 }
+
+
+
+
+
+

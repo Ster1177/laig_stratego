@@ -10,6 +10,7 @@
 
 #include "Cameras.h"
 #include "lsfInterface.h"
+#include "PickInterface.h"
 
 using namespace std;
 
@@ -85,9 +86,11 @@ int main(int argc, char*argv[]){
 
 
 	try {
+
 		app.setScene(&sc);
-		//app.setInterface(cgf_interface);
 		app.setInterface(new PickInterface());
+		//app.setInterface(cgf_interface);
+
 		app.run();
 	}
 	catch(GLexception& ex) {

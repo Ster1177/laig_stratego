@@ -176,6 +176,12 @@ void Cylinder::draw()
 	glPopMatrix();
 }
 
+void Cylinder::translate(double x,double y,double z) {
+	glPushMatrix();
+	glTranslated(x,y,z);
+	glPopMatrix();
+}
+
 //RECTANGULO
 Rectangle::Rectangle(double x_1, double y_1, double x_2, double y_2)
 {

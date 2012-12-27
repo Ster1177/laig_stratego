@@ -43,7 +43,7 @@ void Board::draw() {
 
 	glMapGrid2f(this->step, 0.0,1.0, this->step, 0.0,1.0);
 	glEvalMesh2(GL_FILL, 0,this->step, 0,this->step);		// GL_POINT, GL_LINE, GL_FILL
-
+	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
 }

@@ -106,6 +106,7 @@ public:
   void setSlices(int);
   void setStacks(int);
 
+  void translate(double x,double y,double z);
   void draw();
 
 };

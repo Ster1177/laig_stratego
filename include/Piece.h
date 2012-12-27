@@ -13,10 +13,9 @@
 
 class Piece {
 
-private:
+public:
 	Cylinder * piece;
 	CGFtexture tex;
-public:
 	Piece();
 	void put();
 	virtual ~Piece(){};

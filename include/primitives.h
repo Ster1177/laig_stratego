@@ -80,6 +80,7 @@ private:
   int stacks;
   GLUquadricObj *quadratic;               // Storage For Our Quadratic Objects
   GLUquadricObj *  quadratic_base;
+  double translated[3];
 
 public:
   /*!

@@ -70,8 +70,8 @@ void Sphere::setStacks(int st)
 
 void Sphere::draw()
 {
-    gluQuadricTexture(quadratic, GL_TRUE);      // Create Texture Coords
-    gluQuadricNormals(quadratic, GLU_SMOOTH);   // Create Smooth Normals
+	gluQuadricTexture(quadratic, GL_TRUE);      // Create Texture Coords
+	gluQuadricNormals(quadratic, GLU_SMOOTH);   // Create Smooth Normals
 	gluSphere(quadratic, radius, slices, stacks);
 }
 
@@ -86,7 +86,9 @@ Cylinder::Cylinder(double br, double tr, double ht, int sl, int st)
 	stacks = st;
 	quadratic = gluNewQuadric();
 	quadratic_base = gluNewQuadric();
-
+	translated[0] = 0;
+	translated[1] = 0;
+	translated[2] = 0;
 
 }
 Cylinder::Cylinder(elem* el){
@@ -104,6 +106,10 @@ Cylinder::Cylinder(elem* el){
 
 	quadratic = gluNewQuadric();
 	quadratic_base = gluNewQuadric();
+
+	translated[0] = 0;
+	translated[1] = 0;
+	translated[2] = 0;
 }
 
 double Cylinder::getBaseradius() const
@@ -156,30 +162,31 @@ void Cylinder::setStacks(int st)
 
 void Cylinder::draw()
 {
-
+	glPushMatrix();
+	glTranslated(translated[0],translated[1],translated[2]);
 	gluQuadricTexture(quadratic, GL_TRUE);      // Create Texture Coords
 	gluQuadricNormals(quadratic, GLU_SMOOTH);   // Create Smooth Normals
 	gluCylinder(quadratic, baseRadius, topRadius, height, slices, stacks);
 
-
-
 	//bottom
 	glPushMatrix();
-		glRotated(180,0,1,0);
-		gluDisk(quadratic_base,0,baseRadius,slices,stacks);
+	glRotated(180,0,1,0);
+	gluDisk(quadratic_base,0,baseRadius,slices,stacks);
 	glPopMatrix();
 
 	//top
 	glPushMatrix();
-		glTranslated(0,0,height);
-		gluDisk(quadratic_base,0,topRadius,slices,stacks);
+	glTranslated(0,0,height);
+	gluDisk(quadratic_base,0,topRadius,slices,stacks);
+	glPopMatrix();
+
 	glPopMatrix();
 }
 
 void Cylinder::translate(double x,double y,double z) {
-	glPushMatrix();
-	glTranslated(x,y,z);
-	glPopMatrix();
+	translated[0]+=x;
+	translated[1]+=y;
+	translated[2]+=z;
 }
 
 //RECTANGULO
@@ -247,10 +254,10 @@ void Rectangle::setY2(double y_2)
 void Rectangle::draw()
 {
 	//normal is the same for all
-		//a = [x1,y1,0], b = [x1,y2,0], c = [x2,y1,0]
-		//ab = {0, y2-y1, 0};
-		//ac = {x2 - x1, 0, 0};
-		//normal = ab X ac
+	//a = [x1,y1,0], b = [x1,y2,0], c = [x2,y1,0]
+	//ab = {0, y2-y1, 0};
+	//ac = {x2 - x1, 0, 0};
+	//normal = ab X ac
 
 	double normal[] = {0 ,0 , (y2-y1)*(x2-x1)};
 
@@ -258,14 +265,14 @@ void Rectangle::draw()
 	normal[2] /= sqrt(normal[2]*normal[2]);
 
 	glBegin(GL_QUADS);
-		glNormal3d(normal[0],normal[1],normal[2]);
-		glVertex3d(x1,y1,0);
-		glNormal3d(normal[0],normal[1],normal[2]);
-		glVertex3d(x2,y1,0);
-		glNormal3d(normal[0],normal[1],normal[2]);
-		glVertex3d(x2,y2,0);
-		glNormal3d(normal[0],normal[1],normal[2]);
-		glVertex3d(x1,y2,0);
+	glNormal3d(normal[0],normal[1],normal[2]);
+	glVertex3d(x1,y1,0);
+	glNormal3d(normal[0],normal[1],normal[2]);
+	glVertex3d(x2,y1,0);
+	glNormal3d(normal[0],normal[1],normal[2]);
+	glVertex3d(x2,y2,0);
+	glNormal3d(normal[0],normal[1],normal[2]);
+	glVertex3d(x1,y2,0);
 	glEnd();
 }
 
@@ -400,10 +407,10 @@ void Triangle::draw()
 	double normal[3];
 
 	//normal is the same for all
-		//a = [x1, y1,z1], b = [x2,y2,z2], c = [x3,y3,z3]
-		//ba = {x1 - x2, y1 - y2, z1 - z2};
-		//bc = {x3 - x2, y3 - y2, z3 - z2};
-		//normal = ab X ac
+	//a = [x1, y1,z1], b = [x2,y2,z2], c = [x3,y3,z3]
+	//ba = {x1 - x2, y1 - y2, z1 - z2};
+	//bc = {x3 - x2, y3 - y2, z3 - z2};
+	//normal = ab X ac
 	normal[0] = (y3-y2)*(z2-z1) - (z3-z2)*(y1-y2);
 	normal[1] = (z3-z2)*(x1-x2) - (x3-x2)*(z1-z2);
 	normal[2] = (x3-x2)*(y1-y2) - (y3-y2)*(x1-x2);
@@ -414,12 +421,12 @@ void Triangle::draw()
 	normal[2] /= normalize_factor;
 
 	glBegin(GL_TRIANGLES);
-		glNormal3d(normal[0], normal[1], normal[2]);
-		glVertex3d(x1,y1,z1);
-		glNormal3d(normal[0], normal[1], normal[2]);
-		glVertex3d(x2,y2,z2);
-		glNormal3d(normal[0], normal[1], normal[2]);
-		glVertex3d(x3,y3,z3);
+	glNormal3d(normal[0], normal[1], normal[2]);
+	glVertex3d(x1,y1,z1);
+	glNormal3d(normal[0], normal[1], normal[2]);
+	glVertex3d(x2,y2,z2);
+	glNormal3d(normal[0], normal[1], normal[2]);
+	glVertex3d(x3,y3,z3);
 	glEnd();
 
 }
@@ -434,7 +441,7 @@ Torus::Torus(double inR, double outR, int sl, int lp)
 }
 
 Torus::Torus(elem* el){
-    //<torus inner="0.5" outer="1" slices="80" loops="10" />
+	//<torus inner="0.5" outer="1" slices="80" loops="10" />
 	stringstream* ss;
 
 	ss = new stringstream(  el->attr["inner"] ); *ss >> this->innerRadius; delete ss;

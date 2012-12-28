@@ -50,7 +50,7 @@ void PickInterface::performPicking(int x, int y)
 
 	// force scene drawing under this mode
 	// only the names of objects that fall in the 5x5 window will actually be stored in the buffer
-	//((Scene *)this->scene)->peca->piece->translate(0,0,1);
+	((Scene *)this->scene)->display();
 
 	// restore original projection matrix
 	glMatrixMode (GL_PROJECTION);
@@ -67,6 +67,7 @@ void PickInterface::performPicking(int x, int y)
 
 void PickInterface::processHits (GLint hits, GLuint buffer[])
 {
+	cout << "Hit\n";
 	GLuint *ptr = buffer;
 	GLuint mindepth = 0xFFFFFFFF;
 	GLuint *selected=NULL;

@@ -96,12 +96,15 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 		//printf("%d ",nselected);
 		printf("\n");
 
-		pair<GLuint,GLuint> * choices = &(((Scene *)this->scene)->choices);
+		pair<bool,pair<GLuint,GLuint> > * choices = &(((Scene *)this->scene)->choices);
 
-		if(choices->first == -1)
-			choices->first = selected[0];
+		//Se peca foi seleccionada
+		if(choices->first)
+			//Seleccionar destino
+			choices->second.second = selected[0];
 		else
-			choices->second = selected[0];
+			//Seleccionar peça
+			choices->second.first = selected[0];
 
 
 	}

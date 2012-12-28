@@ -48,7 +48,7 @@ public:
 
 	//display list in use
 	GLuint display_list;
-	pair<bool,pair<GLuint,GLuint>> choices;
+	pair<bool,pair<GLuint,GLuint> > choices;
 	map<GLuint,Piece *> selected_piece;
 	map<GLuint,Piece *> not_selected_piece;
 	map<GLuint, Piece *> pieces;

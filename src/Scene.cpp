@@ -178,33 +178,100 @@ void Scene::init()
 	Piece * peca;
 	for(unsigned int i=1; i<=10; i++) {
 		peca = new Piece();
+		peca->piece->translate(i*10,0,0);
 		pieces[i]= peca;
 //		not_selected_piece[i] = peca;
 	}
 	choices.first = false;
 	choices.second = pair<GLuint,GLuint>();
 
+	this->setUpdatePeriod(10);
+
 }
 
 void Scene::update(long t){
 
+	glPushMatrix();
+	glPushName(-1);
+	map<GLuint, Piece *>::iterator it;
 	// if something is selected
 	if(choices.first) {
-		//if piece was selected before
+		//if piece has been selected before
 		if(choices.second.first == 0) {
 			//Se for > 0, destino foi seleccionado
 			if(choices.second.second > 0) {
 			 //TODO: mover peça
 				choices.first = false;
+				//compile selected pieces
+				map<GLuint, Piece *>::iterator it2;
+				glNewList(1,GL_COMPILE);
 
+				for(it = selected_piece.begin(); it!=selected_piece.end(); it++) {
+					glPushMatrix();
+					glTranslated(0,0,2);
+					glLoadName(it->first);
+					it->second->put();
+					glPopMatrix();
+				}
+				glEndList();
 			}
 		}
 		else {
 			//popular maps
+
+			for(it = pieces.begin(); it != pieces.end(); it++) {
+				if(it->first == choices.second.first) {
+					selected_piece.insert(*it);
+				}
+				else {
+					not_selected_piece.insert(*it);
+
+				}
+			}
+
+
 			//criar lists gl_compile
 			choices.second.first = 0;
+			choices.second.second = 0;
+			//compile not selected pieces
+			glNewList(2,GL_COMPILE);
+
+			for(it = not_selected_piece.begin(); it != not_selected_piece.end(); it++) {
+				glPushMatrix();
+				glLoadName(it->first);
+				it->second->put();
+				glPopMatrix();
+			}
+			glEndList();
 		}
 	}
+	else {
+
+		//since nothing is selected we need to clear the previous selected and non_selected
+		//pieces. We also need to recompile both lists
+
+		if( not_selected_piece.size() != pieces.size() ) {
+
+		    not_selected_piece.clear();
+		    selected_piece.clear();
+			for(it = pieces.begin(); it != pieces.end(); it++) {
+				not_selected_piece.insert(*it);
+			}
+			glNewList(2,GL_COMPILE);
+
+			for(it = not_selected_piece.begin(); it != not_selected_piece.end(); it++) {
+				glPushMatrix();
+				glLoadName(it->first);
+				it->second->put();
+				glPopMatrix();
+			}
+			glEndList();
+			glNewList(1,GL_COMPILE);
+			glEndList();
+
+		}
+	}
+	glPopMatrix();
 
 }
 void Scene::display()
@@ -249,11 +316,12 @@ void Scene::display()
 	}
 
 
+
 	// Draw axis
 	axis.draw();
 	b->draw();
-
-
+/*	glCallList(1);
+	glCallList(2);*/
 
 	// picking example, the important parts are the gl*Name functions
 		// and the code in the associted PickInterface class
@@ -268,6 +336,7 @@ void Scene::display()
 			glTranslatef(i*1.4,0,0);
 			glLoadName(i);		//replaces the value on top of the name stack
 			glCallList(1);
+			glCallList(2);
 			glPopMatrix();
 		}
 
